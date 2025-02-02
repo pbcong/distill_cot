@@ -1,0 +1,20 @@
+mode: logit
+
+data:
+  output_path: "augmented_data.json"
+  upload: null # Set to your HuggingFace Hub repository name to upload (e.g. "username/repo-name")
+
+model:
+  student: gpt2
+
+distillation:
+  temperature: 2.0
+  alpha: 0.7
+
+training:
+  batch_size: 16
+  num_epochs: 3
+  learning_rate: 5e-5
+  warmup_ratio: 0.1
+  max_length: 256
+  save_path: best_student_model

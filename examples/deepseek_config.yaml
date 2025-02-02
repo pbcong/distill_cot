@@ -1,0 +1,15 @@
+# Import base configuration
+!include base_config.yaml
+
+# Override with DeepSeek-specific settings
+model:
+  teacher:
+    name: deepseek-coder-6.7b-instruct
+    api_key: !env DEEPSEEK_API_KEY  # Use environment variable
+    temperature: 0.7
+    max_tokens: 100
+
+# Override training parameters if needed
+training:
+  batch_size: 8  # Reduced batch size for API calls
+  max_length: 512  # Increased context length
