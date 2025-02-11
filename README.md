@@ -2,6 +2,13 @@
 
 A Python project for training and fine-tuning language models with Chain-of-Thought reasoning capabilities.
 
+**WIP**
+Need to add:
+
+- Allow training on multiple gpu
+- Fix some training bug
+- create pipeline for cot data creation
+
 ## Project Structure
 
 ```
