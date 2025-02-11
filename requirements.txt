@@ -1,6 +1,15 @@
-pyyaml>=6.0.1
 torch>=2.0.0
-transformers>=4.30.0
+transformers==4.40.0
 datasets>=2.12.0
+pyyaml>=6.0.1
 tqdm>=4.65.0
 requests>=2.31.0
+black>=23.0.0  # For code formatting
+pytest>=7.0.0  # For testing
+python-dotenv>=1.0.0  # For .env file support
+accelerate>=0.20.0  # For device management
+bitsandbytes>=0.41.0  # For 8-bit quantization
+peft>=0.5.0  # For parameter efficient fine-tuning
+pre-commit>=3.5.0  # For git hooks
+isort>=5.13.2  # For import sorting
+ruff>=0.1.11  # For fast Python linting

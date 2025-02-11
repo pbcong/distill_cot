@@ -1,159 +1,138 @@
-# Model Distillation Framework
+# Distill CoT
 
-A flexible and extensible framework for knowledge distillation of large language models into smaller, more efficient models. This framework supports both logit-based and language output-based distillation approaches.
+A Python project for training and fine-tuning language models with Chain-of-Thought reasoning capabilities.
+
+## Project Structure
+
+```
+distill_cot/
+├── distill_cot/
+│   ├── data/
+│   │   ├── __init__.py
+│   │   └── dataset.py      # Dataset processing and preparation
+│   ├── models/
+│   │   └── __init__.py
+│   ├── training/
+│   │   ├── __init__.py
+│   │   └── trainer.py      # Training logic and configuration
+│   ├── utils/
+│   │   ├── __init__.py
+│   │   └── config.py       # Configuration management
+│   └── __init__.py
+├── main.py                 # Main entry point
+├── pyproject.toml          # Project metadata and dependencies
+├── requirements.txt        # Project dependencies
+└── README.md              # Project documentation
+```
 
 ## Features
 
-- Two distillation modes:
-  - **Logit-based**: Uses the teacher model's logits to guide the student model's training
-  - **Language output-based**: Compares generated text outputs between teacher and student models
-- Extensible architecture using OOP principles
-- Factory pattern for easy distiller creation
-- Configurable parameters for fine-tuning the distillation process
-- Built-in support for model evaluation and validation
-- Example implementation with BERT models
+- Flexible configuration management with environment variable support
+- Structured dataset processing for Chain-of-Thought training
+- Robust training pipeline with logging and error handling
+- Support for model fine-tuning with LoRA
+- Comprehensive logging and model checkpointing
 
 ## Installation
 
+1. Clone the repository:
+
 ```bash
-# Clone the repository
-git clone https://github.com/yourusername/distill-cot.git
-cd distill-cot
-
-# Install dependencies
-pip install torch transformers datasets
+git clone https://github.com/yourusername/distill_cot.git
+cd distill_cot
 ```
 
-## Quick Start
+2. Install dependencies:
 
-Here's a simple example of how to use the framework:
-
-```python
-from transformers import BertForSequenceClassification, BertTokenizerFast
-from src.distiller.factory import DistillerFactory
-
-# Initialize models
-teacher = BertForSequenceClassification.from_pretrained('bert-base-uncased')
-student_config = teacher.config
-student_config.num_hidden_layers = 6  # Smaller model
-student = BertForSequenceClassification.from_config(student_config)
-
-# Create distiller
-distiller = DistillerFactory.create_distiller(
-    mode="logit",
-    teacher_model=teacher,
-    student_model=student,
-    config={
-        'temperature': 2.0,
-        'alpha': 0.7
-    }
-)
-
-# Train the student model
-distiller.train(train_dataloader, val_dataloader)
+```bash
+pip install -r requirements.txt
 ```
 
-## Framework Structure
+## Configuration
 
-```
-distill-cot/
-├── src/
-│   └── distiller/
-│       ├── base.py         # Abstract base class for distillers
-│       ├── logit.py        # Logit-based distillation implementation
-│       ├── language.py     # Language output-based distillation
-│       └── factory.py      # Factory class for creating distillers
-├── examples/
-│   └── distill_bert.py     # Example using BERT models
-└── README.md
-```
+The project can be configured through environment variables or a .env file. Key configuration options include:
 
-## Distillation Modes
+- `MODEL_NAME`: Base model to use (default: "Qwen/Qwen1.5-0.5B-Chat")
+- `DATASET_NAME`: Dataset to use for training (default: "pbcong/gsm8k_step_by_step")
+- `OUTPUT_DIR`: Directory for saving model outputs (default: "./results")
+- `LOGS_DIR`: Directory for saving training logs (default: "./logs")
 
-### Logit-based Distillation
+See `distill_cot/utils/config.py` for all available configuration options.
 
-Uses the teacher model's logits (pre-softmax outputs) to guide the training of the student model. This approach is based on the paper "Distilling the Knowledge in a Neural Network" by Hinton et al.
+## Usage
 
-```python
-distiller = DistillerFactory.create_distiller(
-    mode="logit",
-    teacher_model=teacher,
-    student_model=student,
-    config={
-        'temperature': 2.0,  # Controls softening of probability distributions
-        'alpha': 0.7        # Balances distillation and task-specific losses
-    }
-)
+1. Basic training:
+
+```bash
+python main.py
 ```
 
-### Language Output-based Distillation
+2. Training with custom configuration:
 
-Compares the generated text sequences between teacher and student models using various text similarity metrics.
-
-```python
-distiller = DistillerFactory.create_distiller(
-    mode="language",
-    teacher_model=teacher,
-    student_model=student,
-    tokenizer=tokenizer,    # Required for text processing
-    config={
-        'temperature': 1.0,
-        'max_length': 128   # Maximum sequence length for generation
-    }
-)
+```bash
+python main.py --config path/to/config.env --log-level DEBUG
 ```
 
-## Configuration Options
+## Project Components
 
-### Common Parameters
+### Data Processing (`dataset.py`)
 
-- `temperature`: Controls the softening of probability distributions
-- `config`: Additional configuration dictionary for custom parameters
+The `DataProcessor` class handles:
 
-### Logit Mode Parameters
+- Dataset loading and preprocessing
+- Text tokenization and formatting
+- Label creation for training
 
-- `alpha`: Weight for balancing distillation and task-specific losses
+### Training (`trainer.py`)
 
-### Language Mode Parameters
+The `ModelTrainer` class provides:
 
-- `max_length`: Maximum sequence length for text generation
-- `tokenizer`: Tokenizer instance for processing text inputs/outputs
+- Training configuration and setup
+- Model training and evaluation
+- Checkpoint management
+- Training metrics logging
 
-## Example Usage
+### Configuration (`config.py`)
 
-Check out `examples/distill_bert.py` for a complete example of distilling a BERT-base model into a smaller 6-layer version using the SST-2 sentiment analysis dataset.
+The `Config` class manages:
 
-## Extending the Framework
+- Environment variable loading
+- Configuration validation
+- Directory creation
+- Default value handling
 
-The framework is designed to be easily extensible. To add a new distillation approach:
+## Development
 
-1. Create a new class that inherits from `BaseDistiller`
-2. Implement the required abstract methods:
-   - `compute_loss()`
-   - `train_step()`
-   - `validate()`
-3. Add the new distiller to the factory class
+1. Install development dependencies:
 
-Example:
-
-```python
-class CustomDistiller(BaseDistiller):
-    def compute_loss(self, *args, **kwargs):
-        # Implement your custom loss computation
-        pass
-
-    def train_step(self, *args, **kwargs):
-        # Implement your training step
-        pass
-
-    def validate(self, *args, **kwargs):
-        # Implement your validation logic
-        pass
+```bash
+pip install -e ".[dev]"
 ```
 
-## Contributing
+2. Set up pre-commit hooks:
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+```bash
+pre-commit install
+```
+
+This will set up the following checks to run automatically on git commit:
+
+- black: Code formatting
+- isort: Import sorting
+- ruff: Fast Python linting
+- Additional checks for YAML, TOML, and file formatting
+
+3. Run tests:
+
+```bash
+pytest
+```
+
+You can also run the pre-commit hooks manually on all files:
+
+```bash
+pre-commit run --all-files
+```
 
 ## License
 
