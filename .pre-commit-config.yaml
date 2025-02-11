@@ -20,9 +20,3 @@ repos:
     hooks:
       - id: isort
         args: ["--profile", "black", "--filter-files"]
-
-  - repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: v0.1.11
-    hooks:
-      - id: ruff
-        args: [--fix, --exit-non-zero-on-fix]

@@ -41,7 +41,6 @@ dev = [
     "pytest>=7.0.0",
     "pytest-cov>=4.0.0",
     "mypy>=1.0.0",
-    "ruff>=0.1.0",
 ]
 
 [project.urls]
@@ -57,19 +56,6 @@ packages = ["distill_cot"]
 line-length = 88
 target-version = ["py38"]
 include = '\.pyi?$'
-
-[tool.ruff]
-line-length = 88
-target-version = "py38"
-select = [
-    "E",  # pycodestyle errors
-    "W",  # pycodestyle warnings
-    "F",  # pyflakes
-    "I",  # isort
-    "C",  # flake8-comprehensions
-    "B",  # flake8-bugbear
-]
-ignore = ["E501"]  # line length violations
 
 [tool.mypy]
 python_version = "3.8"
