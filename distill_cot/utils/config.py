@@ -16,7 +16,7 @@ class Config:
 
         # Dataset settings
         self.dataset_name: str = os.getenv("DATASET_NAME", "pbcong/gsm8k_step_by_step")
-        self.dataset_config: str = os.getenv("DATASET_CONFIG", "main")
+        self.dataset_config: str = os.getenv("DATASET_CONFIG", "default")
 
         # Output settings
         self.output_dir: str = os.getenv("OUTPUT_DIR", "./results")

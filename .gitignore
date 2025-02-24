@@ -53,7 +53,7 @@ nosetests.xml
 coverage.xml
 *.cover
 .hypothesis/
-
+.ruff_cache
 # Model checkpoints and data
 best_student_model/
 checkpoints/
